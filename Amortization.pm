@@ -3,7 +3,7 @@ package Finance::Amortization;
 use strict;
 use warnings;
 
-our $VERSION = '0.3';
+our $VERSION = '0.4';
 
 =head1 NAME
 
@@ -42,14 +42,26 @@ methods called on an amortization object.  (Except for new(), of course.)
 
 =head2 new()
 
-$am = Finance::Amortization->new(principal = 0, rate = 0, periods = 0);
+$am = Finance::Amortization->new(principal => 0, rate => 0, periods => 0,
+	compounding => 12, precision => 2);
 
-Creates a new amortization object.  Calling interface is hash style,
-and the fields principal, rate, and periods are available, all defaulting
+Creates a new amortization object.  Calling interface is hash style.
+The fields principal, rate, and periods are available, all defaulting
 to zero.
 
-The rate is the interest rate *per period*.  Thus for monthly payments
-with an annual interest rate, you will need to divide by 12.
+Compounding is a parameter which sets how many periods the rate is compounded
+over.  Thus, if each amortization period is one month, setting compounding
+to 12 (the default), will make the rate an annual rate.  That is, the
+interest rate per period is the rate specified, divided by the compounding.
+
+So, to get an amortization for 30 years on 200000, with a 6% annual rate,
+you would call new(principal => 200000, periods => 12*30, rate => 0.06),
+the compounding will default to 12, and so the rate will work out right
+for monthly payments.
+
+precision is used to specify the number of decimal places to round to
+when returning answers.  It defaults to 2, which is appropriate for
+US currency and many others.
 
 =cut
 
@@ -195,7 +207,8 @@ sub interest {
 =head1 BUGS
 
 This module uses perl's floating point for financial calculations.  This
-may introduce inaccuracies.
+may introduce inaccuracies and/or make this module unsuitable for serious
+financial applications.
 
 =head1 TODO
 
@@ -208,10 +221,13 @@ Allow for caching calculated values.
 Provide output methods and converters to various table modules.
 HTML::Table, Text::Table, and Data::Table come to mind.
 
-Write test scripts.
+Write better test scripts.
 
 Better checking for errors and out of range input.  Return undef
 in these cases.
+
+Use a locale dependent value to set an appropriate default for precision
+in the new() method.
 
 =head1 AUTHOR
 
