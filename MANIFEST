@@ -1,5 +1,7 @@
 Amortization.pm
+Changes
 Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
 README
+t/basic.t

@@ -3,7 +3,7 @@ package Finance::Amortization;
 use strict;
 use warnings;
 
-our $VERSION = '0.2';
+our $VERSION = '0.3';
 
 =head1 NAME
 
@@ -53,14 +53,26 @@ with an annual interest rate, you will need to divide by 12.
 
 =cut
 
-sub new{
+sub new {
 	my $pkg = shift;
 	# bless package variables
-	bless{
-	principal => 0.00,
-	rate => 0.00,
-	periods => 0,
-	@_}, $pkg;
+	my %conf = (
+		principal => 0.00,
+		rate => 0.00,
+		compounding => 12,
+		precision => 2, # how many decimals to round
+		@_
+	);
+	if (!defined $conf{'periods'}) {
+		$conf{'periods'} = $conf{'length'} * $conf{'compounding'};
+	}
+	if (defined($conf{'compounding'})) {
+		$conf{'rate'} /= $conf{'compounding'};
+	}
+
+	bless {
+		%conf
+	}, $pkg;
 }
 
 =head2 rate()
@@ -86,7 +98,7 @@ returns the initial principal being amortized.  Ignores any arguments.
 
 sub principal {
 	my $am = shift;
-	return $am->{'principal'};
+	return sprintf('%.*f', $am->{'precision'}, $am->{'principal'});
 }	
 
 =head2 periods()
@@ -130,7 +142,7 @@ sub payment {
 		return $am->{'payment'} = $p / $n;
 	}
 
-	$am->{'payment'} = $r * $p * $r1**$n / ($r1**$n-1);
+	$am->{'payment'} = sprintf('%.2f', $r * $p * $r1**$n / ($r1**$n-1));
 }
 
 =head2 balance(n)
@@ -155,8 +167,8 @@ sub balance {
 	my $principal = $am->principal;
 	my $pmt = $am->payment();
 
-	return $principal * $rate1 ** $period
-		 - $pmt*($rate1**$period - 1)/$rate;
+	return sprintf('%.*f', $am->{'precision'},
+		 $principal*$rate1**$period-$pmt*($rate1**$period - 1)/$rate);
 
 }
 
@@ -175,12 +187,9 @@ sub interest {
 	return 0 if ($period < 1 or $period > $am->periods);
 
 	my $rate = $am->rate;
-	my $rate1 = $rate + 1;
-	my $periods = $am->periods();
-	my $principal = $am->principal;
-	my $pmt = $am->payment();
 
-	return $rate * $am->balance($period - 1);
+	return sprintf('%.*f', $am->{'precision'},
+		$rate * $am->balance($period - 1));
 }
 
 =head1 BUGS
@@ -208,9 +217,10 @@ in these cases.
 
 Nathan Wagner <nw@hydaspes.if.org>
 
+This entire module is written by me and placed into the public domain.
+
 =cut
 
 1;
-
 
 __END__
