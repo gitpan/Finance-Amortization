@@ -1,3 +1,7 @@
+0.5
+
+Changes to improve "kwalitee" rating on cpants.
+
 0.4
 
 Fixed doc bug in BUGS section.  BUGS now notes that there is a test script,

@@ -1,7 +1,13 @@
-Amortization.pm
+.cvsignore
 Changes
+examples/htmlamtable
+lib/Finance/Amortization.pm
 Makefile.PL
-MANIFEST
-META.yml			Module meta-data (added by MakeMaker)
+MANIFEST			This list of files
+META.yml
 README
+t/00-load.t
 t/basic.t
+t/boilerplate.t
+t/pod-coverage.t
+t/pod.t

@@ -3,7 +3,7 @@ package Finance::Amortization;
 use strict;
 use warnings;
 
-our $VERSION = '0.4';
+our $VERSION = '0.5';
 
 =head1 NAME
 
@@ -210,6 +210,10 @@ This module uses perl's floating point for financial calculations.  This
 may introduce inaccuracies and/or make this module unsuitable for serious
 financial applications.
 
+Please report any bugs or feature requests to
+C<bug-finance-amortization at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Finance-Amortization>.
+
 =head1 TODO
 
 Use Math::BigRat for the calculations.
@@ -228,6 +232,10 @@ in these cases.
 
 Use a locale dependent value to set an appropriate default for precision
 in the new() method.
+
+=head1 LICENSE
+
+None.  This entire module is in the public domain.
 
 =head1 AUTHOR
 
